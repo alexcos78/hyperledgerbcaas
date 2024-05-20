@@ -2,8 +2,8 @@
   copy:
     src: "{{ role_path }}/files/smartcontract.go"
     dest: "{{ lookup('env', 'HOME') }}/go/src/github.com/{{ github_userid }}/fabric-samples/asset-transfer-basic/chaincode-go/chaincode/smartcontract.go"
-    owner: ubuntu
-    group: ubuntu
+    owner: root
+    group: root
     mode: '0755'
     backup: yes
 
