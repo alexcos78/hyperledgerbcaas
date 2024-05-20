@@ -1,0 +1,17 @@
+- name: Create directory for Go workspace
+
+  ansible.builtin.file:
+    path: "{{ lookup('env', 'HOME') }}/go/src/github.com/{{ github_userid }}"
+    state: directory
+    mode: '0755'
+
+- name: Download and prepare the Hyperledger Fabric install script
+  get_url:
+    url: https://raw.githubusercontent.com/hyperledger/fabric/main/scripts/install-fabric.sh
+    dest: "{{ lookup('env', 'HOME') }}/go/src/github.com/{{ github_userid }}/install-fabric.sh"
+    mode: '0755'
+
+- name: Execute the install script for Hyperledger Fabric
+  command:
+    cmd: "./install-fabric.sh --fabric-version {{ fabric_version }}"
+    chdir: "{{ lookup('env', 'HOME') }}/go/src/github.com/{{ github_userid }}"

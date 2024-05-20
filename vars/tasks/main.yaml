@@ -1,0 +1,15 @@
+# - name: Install docker
+#   ansible.builtin.include_tasks: "docker.yaml"    
+
+- name: Install go v.1.19
+  ansible.builtin.include_tasks: "go.yaml"
+
+- name: Install jq
+  ansible.builtin.include_tasks: "jq.yaml"
+
+- name: Install hyperledger
+  ansible.builtin.include_tasks: "hyperledgerInstall.yaml"
+
+- name: Execute hyperledger
+  ansible.builtin.include_tasks: "hyperledgerExecute.yaml"
+  

@@ -1,0 +1,35 @@
+- name: Replace existing smartcontract.go with a new version
+  copy:
+    src: "{{ role_path }}/files/smartcontract.go"
+    dest: "{{ lookup('env', 'HOME') }}/go/src/github.com/{{ github_userid }}/fabric-samples/asset-transfer-basic/chaincode-go/chaincode/smartcontract.go"
+    owner: ubuntu
+    group: ubuntu
+    mode: '0755'
+    backup: yes
+
+# - name: Shoot down the network if exist
+#   command:
+#     chdir: "{{ lookup('env', 'HOME') }}/go/src/github.com/{{ github_userid }}/fabric-samples/test-network/"
+#     cmd: ./network.sh down
+#   become: yes
+
+- name: Start Hyperledger Fabric network and create channel
+  command:
+    chdir: "{{ lookup('env', 'HOME') }}/go/src/github.com/{{ github_userid }}/fabric-samples/test-network/"
+    cmd: ./network.sh up createChannel -c mychannel -ca
+  become: yes
+    #become_user: ubuntu
+
+- name: Deploy smart contract
+  command:
+    chdir: "{{ lookup('env', 'HOME') }}/go/src/github.com/{{ github_userid }}/fabric-samples/test-network/"
+    cmd: ./network.sh deployCC -ccn basic -ccp ../asset-transfer-basic/chaincode-go/ -ccl go
+  become: yes
+    #become_user: ubuntu
+
+- name: Start the Go-based REST API server
+  command:
+    chdir: "{{ lookup('env', 'HOME') }}/go/src/github.com/{{ github_userid }}/fabric-samples/asset-transfer-basic/rest-api-go/"
+    cmd: go run main.go
+  become: yes
+    #become_user: ubuntu
